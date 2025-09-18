@@ -1,0 +1,15 @@
+@import "../styles/global.css";
+.expense-wrap{ min-height:100vh; display:grid; place-items:center; position:relative; padding:4rem 6%;}
+.panel{ width:min(560px, 94%); padding:28px }
+.panel-title{ margin:6px 0 4px; font-size:34px; font-weight:800 }
+.panel-sub{ color:var(--muted); margin:0 0 18px }
+.panel-form{ display:grid; gap:14px }
+.row-gap{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px }
+.expense-blob-1{ width:360px;height:360px;left:8%;top:-40px;background: radial-gradient(circle at 30% 30%, rgba(123,31,162,.5), transparent 62%); }
+.expense-blob-2{ width:360px;height:360px;right:6%;bottom:-40px;background: radial-gradient(circle at 70% 70%, rgba(91,164,255,.5), transparent 62%); }
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}

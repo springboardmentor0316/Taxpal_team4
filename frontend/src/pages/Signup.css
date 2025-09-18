@@ -1,0 +1,83 @@
+@import "../styles/global.css";
+
+/* ==========================
+   SIGNUP-ONLY LAYOUT TWEAKS
+   ========================== */
+
+/* Simulate ~90% zoom to remove scroll (Signup only) */
+.signup-page .auth-grid {
+  transform: scale(0.90) !important;
+  transform-origin: top center;
+  overflow: hidden !important;            /* hide any accidental scrollbars */
+  gap: 3rem !important;                   /* a bit tighter than default */
+}
+
+/* Move hero a bit left, card a bit right */
+.signup-page .auth-left  { transform: translateX(-24px); }
+.signup-page .auth-right { transform: translateX(24px); }
+
+/* Shrink the card itself */
+.signup-page .auth-right {
+  width: min(420px, 95%) !important;      /* smaller card */
+  min-height: 450px !important;
+  padding: 36px 22px !important;
+  border-radius: 14px !important;
+}
+
+/* Increase input fields */
+.signup-page .auth-form .input {
+  height: 42px;                  /* taller fields */
+  font-size: 13px;               /* slightly bigger text */
+  padding: 0 14px;               /* inside spacing */
+  border-radius: 10px;           /* smoother look */
+}
+
+/* Make inputs and texts more compact to reveal circles */
+.signup-page .auth-title { font-size: 26px; font-weight: 700; margin: 0 0 6px; }
+.signup-page .auth-sub   { font-size: 16px; margin: 0 0 14px; color: var(--muted); }
+.signup-page .auth-form  { gap: 10px; margin-top: 4px; }
+
+.signup-page .input       { font-size: 12px; padding: 8px 10px; }
+.signup-page .row-between { font-size: 12px; }
+.signup-page .error       { font-size: 12px; margin-bottom: 6px; }
+
+/* Password toggle wrapper */
+.signup-page .password-wrapper { position: relative; }
+.signup-page .password-wrapper .input { padding-right: 32px; }
+.signup-page .toggle-password {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  cursor: pointer; color: var(--muted); font-size: 0.9rem;
+}
+.signup-page .toggle-password:hover { color: var(--text); }
+
+/* ==========================
+   CIRCLES: smaller but visible
+   ========================== */
+/* Circles are ::before/::after of .auth-right in AuthLayout.css.
+   We override their size/blur/position for Signup only using CSS vars
+   so we don't lose the effect. */
+.signup-page .auth-right {
+  --circle-size: 180px;    /* smaller circles for this page */
+  --circle-blur: 6px;
+}
+
+/* Fine-tune each circle's position so they frame the smaller card */
+.signup-page .auth-right::before {  /* top-left violet */
+  top: -40px !important;
+  right: calc(100% - 36px) !important;
+}
+.signup-page .auth-right::after {   /* bottom-right blue */
+  right: -24px !important;
+  bottom: -36px !important;
+}
+
+/* Optional: slightly tighter dashed line so it doesn't crowd the card */
+.signup-page .line-dash {
+  background: repeating-linear-gradient(90deg, #6f7688 0 10px, transparent 10px 22px) !important;
+  opacity: .6;
+}
+
+.signup-page.no-scroll {
+  height: 100vh;
+  overflow: hidden;   /* disables scroll only for Signup */
+}

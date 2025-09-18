@@ -1,0 +1,236 @@
+/* Settings page (includes app sidebar + inner settings layout) */
+
+/* page wrapper */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #0b0f29;
+  color: #e6eef8;
+}
+
+/* ---------------- APP SIDEBAR (matches Home) ---------------- */
+.sidebar {
+  background: #0e1626;
+  width: 80px;
+  transition: width 0.28s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 8px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.01) inset;
+}
+.sidebar:hover { width: 220px; }
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+.sidebar .logo img {
+  width: 40px;
+  height: 40px;
+}
+
+/* sidebar nav */
+.sidebar nav { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.sidebar-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 12px;
+  color: #9aa3b2;
+  border-radius: 10px;
+  transition: background .18s, color .18s;
+  white-space: nowrap;
+}
+.sidebar-item svg { font-size: 18px; min-width: 18px; }
+.sidebar-item:hover { background: rgba(255,255,255,0.02); color: #fff; }
+.sidebar-item.active { background: linear-gradient(90deg,#1f2a50,#121827); color: #fff; }
+
+.sidebar-bottom { margin-bottom: 8px; display:flex; flex-direction: column; gap:8px; }
+
+/* logout style */
+.sidebar-item.logout { color: #ff6b6b; }
+
+/* ---------------- MAIN CONTENT ---------------- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* topbar */
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.topbar input {
+  width: 420px;
+  max-width: 60%;
+  background: #0f1b33;
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #dfe9f8;
+}
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.tiny-btn {
+  background: #0e1b34;
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: #c6d5f0;
+}
+
+/* ---------------- SETTINGS INNER LAYOUT ---------------- */
+.settings-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 10px;
+  align-items: stretch;
+}
+
+/* left settings menu */
+.settings-sidebar {
+  width: 260px;
+  padding: 28px;
+  border-right: 1px solid rgba(255,255,255,0.15); /* light white shade */
+}
+.settings-sidebar h2 { display:flex; align-items:center; gap:10px; font-size:20px; margin:0 0 8px 0; }
+.settings-subtitle { color: #8897b2; font-size:13px; margin-bottom: 18px; }
+.settings-menu { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+.settings-menu li {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  color:#c6d5f0;
+  cursor:pointer;
+}
+.settings-menu li.active, .settings-menu li:hover {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  color: #fff;
+}
+.menu-icon { font-size:16px; color:#c6d5f0; }
+
+/* right panel */
+.settings-content {
+  flex: 1;
+  padding: 18px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* header area inside right panel */
+.settings-header {
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+}
+.settings-header h2 { 
+  margin:0; 
+  font-size:20px; 
+  border-bottom: 2px solid rgba(255,255,255,0.15); /* light white separator */
+  padding-bottom: 10px; 
+  margin-bottom: 15px;
+}
+.settings-links { display:flex; gap:12px; align-items:center; }
+.small-link {
+  background: transparent;
+  border: none;
+  color: #aebfd9;
+  padding: 6px 10px;
+  border-radius: 14px;
+  cursor:pointer;
+}
+.small-link.underline, .small-link:hover { color: #fff; text-decoration: underline; border-bottom: 2px solid rgba(255,255,255,0.15); }
+
+/* categories list card */
+.categories-list {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.category-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); /* light white bg */
+  padding:12px 16px;
+  border-radius:10px;
+  border: 1px solid rgba(255,255,255,0.15); /* light white border */
+}
+.category-item span { font-size:15px; color:#fff; }
+.actions { display:flex; gap:12px; align-items:center; }
+.icon { cursor:pointer; font-size:14px; color:#fff; }
+.icon.edit { color:#fff; }
+.icon.delete { color:#ff7b7b; }
+
+/* Add button row */
+.add-row {
+  margin-top: 12px;
+  display:flex;
+  justify-content:center; /* center the add button */
+}
+.add-btn {
+  width: 320px;
+  max-width:100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: none;
+  color: #fff;
+  background: linear-gradient(90deg,#5b63f6,#a64be0); /* keep original gradient */
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  box-shadow: 0 6px 18px rgba(86,77,170,0.12);
+}
+
+/* small cards for other tabs */
+.settings-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); /* light white shade */
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15); /* light white border */
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .sidebar { display:none; }
+  .topbar input { width: 60%; }
+  .settings-sidebar { width: 200px; }
+  .add-btn { width: 100%; }
+}
+
+/* Bright card wrapper (all cards including category management) */
+.bright-card {
+  border: 2px solid rgba(255,255,255,0.15); /* light white border */
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* Bright category items */
+.bright-category {
+  border: 1.5px solid rgba(255,255,255,0.15); /* light white */
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Center add button */
+.center-btn {
+  display: block;
+  margin: 15px auto 0 auto;
+}
