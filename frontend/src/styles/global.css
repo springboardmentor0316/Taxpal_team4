@@ -1,0 +1,128 @@
+:root{
+  --bg:#0d0f14;
+  --panel:#12151d;
+  --panel-2:#0f1219;
+  --text:#e9ecf1;
+  --muted:#a0a7b4;
+  --border:rgba(255,255,255,0.14);
+  --shadow:0 10px 30px rgba(0,0,0,0.35);
+  --primary-1:#5ba4ff; /* blue */
+  --primary-2:#7b1fa2; /* purple */
+  --success:#18c37e;
+  --danger:#ef476f;
+  --warning:#ffd166;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+}
+
+/* Utilities */
+.container { width:min(1200px, 92%); margin-inline:auto; }
+.link{color:#9bbcff; text-decoration:none}
+.link:hover{text-decoration:underline}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.9rem 1.2rem; border-radius:12px; border:none; cursor:pointer;
+  font-weight:600; letter-spacing:.2px;
+}
+.btn-gradient{
+  background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+  color:white; box-shadow: var(--shadow);
+}
+.btn-ghost{ background:#343a46; color:#e6e9ef; }
+.input{
+  width:100%; padding:.95rem 1rem; border-radius:12px;
+  background:#0e1219; color:var(--text);
+  border:1px solid var(--border); outline:none;
+}
+.input:focus{ border-color:#6e9cff; box-shadow:0 0 0 3px rgba(110,156,255,0.15)}
+.glass{
+  background: radial-gradient(1200px 400px at -10% -20%, rgba(123,31,162,.18), transparent 60%),
+              radial-gradient(800px 400px at 110% 120%, rgba(91,164,255,.16), transparent 60%),
+              linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
+  box-shadow: var(--shadow);
+}
+
+/* Big left headline used on auth pages */
+.hero{
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight:800; margin:0 0 18px 0;
+}
+.hero-chip{
+  display:inline-block; border:2px solid #fff; border-radius:6px;
+  padding:.55rem .9rem; font-weight:700; background:transparent; color:#fff;
+}
+
+/* Error text */
+.error {
+  color: var(--danger);
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+/* Success text (optional) */
+.success {
+  color: var(--success);
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+/* Dashboard utilities */
+.dashboard-wrap {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* sidebar + main */
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--panel);
+  padding: 20px;
+}
+
+.main-content {
+  padding: 24px;
+}
+
+.card {
+  background: var(--panel-2);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+:root {
+  /* Circle + button gradient colors */
+  --primary-1: #6586FA;  /* blue */
+  --primary-2: #8240C6;  /* violet */
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, var(--primary-2), var(--primary-1));
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}
+
+/* html, body {
+  overflow: hidden;
+} */

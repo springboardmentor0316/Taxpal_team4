@@ -1,0 +1,196 @@
+@import "../styles/global.css";
+
+:root{
+  --bg-true: #0b0d11;
+  --blob-violet: #8240C6;
+  --blob-violet-deep: #3b0764;
+  --blob-blue: #6586FA;
+  --blob-blue-deep: #1e3a8a;
+
+  --circle-size: 220px;        
+  --circle-blur: 8px;
+  --card-bg-alpha: 0.42;       
+  --card-dimness: 0.62;       
+  --card-radius: 16px;
+}
+
+/* ---------------------------
+   Page grid
+   --------------------------- */
+.auth-grid{
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;   /* more space left, card stays compact */
+  gap: 5rem;                          /* larger gap between left + right */
+  place-items: center;
+  padding: 4rem 6%;
+  position: relative;
+  background: var(--bg-true);
+
+  overflow: hidden;
+
+  /* scale down slightly but not too much */
+  transform: scale(0.9);
+  transform-origin: top center;
+}
+
+/* Left column */
+.auth-left{
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+  z-index: 3;
+  text-align: left;
+  margin-right: 40px;   /* push hero further left */
+}
+
+.hero{
+  white-space: nowrap;
+}
+
+.chip-line{
+  display: flex;
+  align-items: center;
+  gap: 12px;            /* space between chip and line */
+  margin-top: 18px;
+  overflow: visible;    /* allow the line to overflow the left column */
+}
+
+.hero-chip {
+  display: inline-block;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  padding: .55rem .9rem;
+  font-weight: 700;
+  color: #fff;
+  background: transparent;
+  position: relative;
+  z-index: 2;
+
+  /* prevent text wrapping */
+  white-space: nowrap;
+}
+
+
+/* 🔧 Make the dashed line run past the left column and under the card */
+.line-dash{
+  flex: none;                     /* don't shrink */
+  width: 60vmax;                 /* extend far to the right */
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #6f7688 0 14px, transparent 14px 28px);
+  opacity: .6;
+  pointer-events: none;
+}
+
+
+
+/* ---------------------------
+   Right column (glass card)
+   --------------------------- */
+.auth-right{
+  width: min(460px, 92%);
+  padding: 32px 28px 24px;
+  position: relative;
+  z-index: 6;
+  isolation: isolate;
+
+  margin-left: 40px;  /* push card further right */
+
+  border-radius: var(--card-radius);
+  background: rgba(16,16,16, var(--card-bg-alpha));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px) brightness(var(--card-dimness)) saturate(110%);
+  -webkit-backdrop-filter: blur(4px) brightness(var(--card-dimness)) saturate(110%);
+}
+
+.auth-right::marker { display:none; }
+
+/* ---------------------------
+   Circles behind the card
+   --------------------------- */
+.auth-right::before,
+.auth-right::after{
+  content: "";
+  position: absolute;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(var(--circle-blur));
+  will-change: transform, opacity;
+  opacity: 1;
+}
+
+.auth-right::before{
+  right: calc(100% - 60px);
+  top: -60px;
+  background:
+    radial-gradient(circle at 35% 35%,
+      var(--blob-violet) 0%,
+      var(--blob-violet-deep) 65%,
+      transparent 100%);
+  animation: float-top 12s ease-in-out infinite alternate;
+}
+
+.auth-right::after{
+  right: -40px;
+  bottom: -60px;
+  background:
+    radial-gradient(circle at 65% 65%,
+      var(--blob-blue) 0%,
+      var(--blob-blue-deep) 65%,
+      transparent 100%);
+  animation: float-bottom 13s ease-in-out infinite alternate-reverse;
+}
+
+/* ---------------------------
+   🔹 Page-specific override (shift TOP circle right)
+   Applies ONLY when the root .auth-grid also has the page class:
+   .auth-grid.forgot-page, .auth-grid.otp-page, .auth-grid.reset-page
+   --------------------------- */
+.auth-grid.forgot-page .auth-right::before,
+.auth-grid.otp-page   .auth-right::before,
+.auth-grid.reset-page .auth-right::before {
+  /* move the violet/top circle horizontally to the right */
+  right: calc(100% - 20px); /* smaller offset => circle appears more right */
+  /* you can tweak the value above if you want more/less shift */
+}
+
+/* ---------------------------
+   Animations
+   --------------------------- */
+@keyframes float-top { from { transform: translateY(0) translateX(0) } to { transform: translateY(-8px) translateX(6px) } }
+@keyframes float-bottom { from { transform: translateY(0) translateX(0) } to { transform: translateY(10px) translateX(-6px) } }
+
+/* ---------------------------
+   Footer note
+   --------------------------- */
+.auth-footer-note{
+  margin-top: 14px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.95rem;
+}
+
+/* ---------------------------
+   Responsive tweaks
+   --------------------------- */
+@media (max-width: 980px){
+  .auth-grid{
+    grid-template-columns: 1fr;
+    padding: 3rem 5%;
+    transform: scale(0.95);
+  }
+  .auth-left{ 
+    text-align:center; 
+    margin-right: 0;
+  }
+  .chip-line{ flex-direction:column; gap:8px; }
+  .line-dash{ width:50%; margin-inline:auto; }
+  .auth-right{ width: min(560px, 98%); margin-left: 0; }
+  :root { --circle-size: 160px; --circle-blur: 6px; }
+  .auth-right::before{ top: -40px; right: calc(100% - 40px); }
+  .auth-right::after{ right: -30px; bottom: -40px; }
+}
