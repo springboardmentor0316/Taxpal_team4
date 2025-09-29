@@ -10,6 +10,8 @@ import budgetRoutes from "./routes/budgetRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+
+import taxRoutes from "./routes/taxRoutes.js";
 const app = express();
 
 // CORS
@@ -29,13 +31,13 @@ app.get("/api/health", (req, res) => res.json({ ok: true }));
 // ===== ROUTES =====
 // Milestone 1
 app.use("/api/users", userRoutes);
-//app.use("/api/users", require("./routes/userRoutes"));
 
 // ✅ Milestone 2
 app.use("/api/budgets", budgetRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/tax", taxRoutes);
 
 // Root (optional)
 app.get("/", (_req, res) => res.send("Taxpal backend is running 🚀"));

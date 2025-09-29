@@ -397,3 +397,37 @@
 .modal-form label textarea {
   width: 100%;
 }
+
+
+/* Force sidebar always expanded with labels visible (overrides other rules) */
+.sidebar.always-expanded {
+  width: 240px !important;
+  min-width: 240px !important;
+}
+
+/* Make label text visible even if other CSS tries to hide it */
+.sidebar.always-expanded .sidebar-item .label,
+.sidebar.always-expanded .sidebar-item span {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+/* Make sure the nav items have the proper spacing with visible labels */
+.sidebar.always-expanded .sidebar-item {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* If some styles reduced width of logo area, ensure logo fits */
+.sidebar.always-expanded .logo img {
+  width: 40px;
+  height: 40px;
+}
+
+/* If any other rule forced overflow hidden, allow content */
+.sidebar.always-expanded {
+  overflow: visible !important;
+}

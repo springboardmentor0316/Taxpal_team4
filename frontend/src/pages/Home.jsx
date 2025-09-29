@@ -26,6 +26,7 @@ import {
 import api from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LogoutConfirm from "../components/LogoutConfirm"; // ✅ Import modal
 
 const COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#F44336", "#00BCD4"];
 
@@ -35,6 +36,9 @@ export default function Home() {
   const [totals, setTotals] = useState({ income: 0, expense: 0, savings: 0 });
   const [pieData, setPieData] = useState([]);
   const [recent, setRecent] = useState([]);
+
+  // ✅ For logout modal
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // ✅ Fetch dashboard data
   const fetchHomeData = async () => {
@@ -57,7 +61,7 @@ export default function Home() {
     fetchHomeData();
   }, []);
 
-  // ✅ Logout
+  // ✅ Logout handler
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -124,7 +128,11 @@ export default function Home() {
           <Link to="/settings" className="sidebar-item">
             <FaCog /> <span>Settings</span>
           </Link>
-          <div className="sidebar-item logout" onClick={handleLogout}>
+          {/* ✅ Trigger modal instead of direct logout */}
+          <div
+            className="sidebar-item logout"
+            onClick={() => setShowLogoutConfirm(true)}
+          >
             <FaSignOutAlt /> <span>Logout</span>
           </div>
         </div>
@@ -256,6 +264,13 @@ export default function Home() {
           </>
         )}
       </main>
+
+      {/* ✅ Logout Confirm Modal */}
+      <LogoutConfirm
+        show={showLogoutConfirm}
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 }

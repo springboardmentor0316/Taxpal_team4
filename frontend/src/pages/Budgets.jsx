@@ -15,11 +15,11 @@ import {
   FaTrash,
   FaBullseye,
   FaReceipt,
-  FaRegCalendarAlt,
 } from "react-icons/fa";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LogoutConfirm from "../components/LogoutConfirm"; // ✅ Import logout modal
 
 export default function Budgets() {
   const navigate = useNavigate();
@@ -35,6 +35,9 @@ export default function Budgets() {
     date: "",
     description: "",
   });
+
+  // ✅ For logout modal
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
   const token = localStorage.getItem("token");
@@ -69,6 +72,7 @@ export default function Budgets() {
     // eslint-disable-next-line
   }, []);
 
+  // ✅ Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -190,33 +194,37 @@ export default function Budgets() {
       <ToastContainer position="bottom-right" autoClose={2000} />
 
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className="sidebar always-expanded">
         <div className="logo">
           <img src="/assets/logo.png" alt="Taxpal Logo" />
         </div>
         <nav>
           <Link to="/dashboard" className="sidebar-item">
-            <FaHome /> <span>Dashboard</span>
+            <FaHome /> <span className="label">Dashboard</span>
           </Link>
           <Link to="/transactions" className="sidebar-item">
-            <FaWallet /> <span>Transactions</span>
+            <FaWallet /> <span className="label">Transactions</span>
           </Link>
           <Link to="/budgets" className="sidebar-item active">
-            <FaListAlt /> <span>Budgets</span>
+            <FaListAlt /> <span className="label">Budgets</span>
           </Link>
           <Link to="/tax" className="sidebar-item">
-            <FaCalculator /> <span>Tax Estimator</span>
+            <FaCalculator /> <span className="label">Tax Estimator</span>
           </Link>
           <Link to="/reports" className="sidebar-item">
-            <FaFileAlt /> <span>Reports</span>
+            <FaFileAlt /> <span className="label">Reports</span>
           </Link>
         </nav>
         <div className="sidebar-bottom">
           <Link to="/settings" className="sidebar-item">
-            <FaCog /> <span>Settings</span>
+            <FaCog /> <span className="label">Settings</span>
           </Link>
-          <div className="sidebar-item logout" onClick={handleLogout}>
-            <FaSignOutAlt /> <span>Logout</span>
+          {/* ✅ Trigger modal instead of direct logout */}
+          <div
+            className="sidebar-item logout"
+            onClick={() => setShowLogoutConfirm(true)}
+          >
+            <FaSignOutAlt /> <span className="label">Logout</span>
           </div>
         </div>
       </aside>
@@ -395,16 +403,14 @@ export default function Budgets() {
 
               <label className="month-label">
                 Month
-                <div className="month-input-wrapper">
-                  <FaRegCalendarAlt className="calendar-icon" style={{ color: "#fff" }} />
-                  <input
-                    type="month"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+                <input
+                  type="month"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  required
+                  style={{ color: "#fff", backgroundColor: "transparent" }}
+                />
               </label>
 
               <label>
@@ -446,6 +452,13 @@ export default function Budgets() {
           </div>
         </div>
       )}
+
+      {/* ✅ Logout Confirm Modal */}
+      <LogoutConfirm
+        show={showLogoutConfirm}
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 }

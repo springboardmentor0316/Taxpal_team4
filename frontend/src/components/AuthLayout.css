@@ -194,3 +194,13 @@
   .auth-right::before{ top: -40px; right: calc(100% - 40px); }
   .auth-right::after{ right: -30px; bottom: -40px; }
 }
+
+/* Logo styles */
+.logo-wrapper {
+  margin-bottom: 20px;
+}
+
+.auth-logo {
+  width: 100px;   /* adjust size */
+  height: auto;
+}
