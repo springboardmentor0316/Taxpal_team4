@@ -5,12 +5,11 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import OTP from "./pages/OTP";
 import ResetPassword from "./pages/ResetPassword";
-import AddIncome from "./pages/AddIncome";
-import AddExpense from "./pages/AddExpense";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Budgets from "./pages/Budgets";
+import TaxEstimator from "./pages/TaxEstimator";
 import "./styles/global.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,12 +22,11 @@ export default function App() {
         <Route path="/forgot" element={<ForgotPassword />} />{" "}
         <Route path="/otp" element={<OTP />} />{" "}
         <Route path="/reset" element={<ResetPassword />} />{" "}
-        <Route path="/income/new" element={<AddIncome />} />{" "}
-        <Route path="/expense/new" element={<AddExpense />} />{" "}
         <Route path="/home" element={<Home />} />{" "}
         <Route path="/dashboard" element={<Dashboard />} />{" "}
         <Route path="/budgets" element={<Budgets />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/tax" element={<TaxEstimator />} />
       </Routes>{" "}
       {/* ✅ Toasts appear at the top-right corner */}{" "}
       <ToastContainer position="top-right" autoClose={3000} />{" "}

@@ -9,6 +9,11 @@ export default function AuthLayout({
   return (
     <div className="auth-grid">
       <div className="auth-left">
+        {/* ✅ Logo from public/assets */}
+        <div className="logo-wrapper">
+          <img src="/assets/logo.png" alt="Taxpal Logo" className="auth-logo" />
+        </div>
+
         <h1 className="hero">{heroTitle}</h1>
 
         {/* chip + dotted line that reaches the card */}

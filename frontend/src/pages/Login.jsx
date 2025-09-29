@@ -5,17 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import api from "../api";
-//import { api, setAuthToken } from "../api";
+import api, { setAuthToken } from "../api"; // ✅ Correct import
 
 export default function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ✅ Gmail validation (fixed regex)
+  // ✅ Gmail validation
   const validateEmail = (email) => {
     if (/\s/.test(email)) return "Email should not contain spaces";
     if (!email.includes("@")) return "Email must contain '@'";
@@ -25,8 +25,9 @@ export default function Login() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (loading) return;
 
-    // ✅ Empty field check
+    // ✅ Empty fields check
     if (!form.email || !form.password) {
       toast.error("Enter all fields");
       return;
@@ -40,19 +41,20 @@ export default function Login() {
     }
 
     try {
-      // ✅ API login call
+      setLoading(true);
+
+      // ✅ API login
       const res = await api.post("/users/login", form);
 
-      // ✅ Save token + set auth header
-      localStorage.setItem("token", res.data.token);
-      //setAuthToken(res.data.token);
+      // ✅ Set token globally
+      setAuthToken(res.data.token);
 
       toast.success("Logged in Successfully!");
-
-      // ✅ Navigate in same tab
       navigate("/home");
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +112,8 @@ export default function Login() {
         </div>
 
         {/* Submit button */}
-        <button className="btn btn-gradient" type="submit">
-          Login
+        <button className="btn btn-gradient" type="submit" disabled={loading}>
+          {loading ? "Logging in…" : "Login"}
         </button>
       </form>
     </AuthLayout>

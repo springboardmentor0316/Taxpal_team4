@@ -9,15 +9,12 @@
 /* Sidebar */
 .sidebar {
   background: #111827;
-  width: 80px;
+  width: 220px; /* keep it expanded always */
   transition: width 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-}
-.sidebar:hover {
-  width: 220px;
 }
 .sidebar .logo {
   text-align: center;
@@ -49,12 +46,7 @@
   min-width: 20px;
 }
 .sidebar-item span {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.sidebar:hover .sidebar-item span {
-  opacity: 1;
+  opacity: 1; /* always visible */
   pointer-events: auto;
 }
 .sidebar-item:hover,
@@ -416,8 +408,9 @@ th {
   }
 }
 
-/* === Force calendar icon inside date input to white === */
-.modal-form input[type="date"]::-webkit-calendar-picker-indicator {
+/* === Force calendar/month picker icon inside date input to white === */
+.modal-form input[type="date"]::-webkit-calendar-picker-indicator,
+.modal-form input[type="month"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
 }
@@ -442,19 +435,6 @@ th {
 
 .form-group.full-width {
   grid-column: span 2;
-}
-
-/* Inputs */
-.modal-form input,
-.modal-form select,
-.modal-form textarea {
-  margin-top: 6px;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #374151;
-  background: #1f2937;
-  color: #fff;
-  font-size: 14px;
 }
 
 /* Month input wrapper */

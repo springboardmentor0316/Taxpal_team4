@@ -21,6 +21,9 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// 🔹 Import LogoutConfirm modal
+import LogoutConfirm from "../components/LogoutConfirm";
+
 export default function Settings() {
   const navigate = useNavigate();
 
@@ -44,9 +47,24 @@ export default function Settings() {
     "Rental Income",
   ]);
 
-  const handleLogout = () => {
+  // 🔹 State for Logout Confirm Modal
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  // Trigger logout modal
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  // Cancel logout
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
+
+  // Confirm logout
+  const handleConfirmLogout = () => {
     localStorage.removeItem("token");
     toast.info("Logged out successfully");
+    setShowLogoutConfirm(false);
     setTimeout(() => navigate("/", { replace: true }), 800);
   };
 
@@ -81,7 +99,7 @@ export default function Settings() {
   };
 
   const handleAddCategory = () => {
-    const name = prompt(`Add new ₹{categoryType} category:`);
+    const name = prompt(`Add new ${categoryType} category:`);
     if (!name) return;
     if (categoryType === "expense")
       setExpenseCategories([...expenseCategories, name]);
@@ -96,7 +114,7 @@ export default function Settings() {
     <div className="home-container">
       <ToastContainer position="bottom-right" autoClose={2000} />
 
-      {/* ================== Sidebar (same as Home.jsx) ================== */}
+      {/* ================== Sidebar ================== */}
       <aside className="sidebar">
         <div className="logo">
           <img src="/assets/logo.png" alt="Taxpal Logo" />
@@ -125,7 +143,8 @@ export default function Settings() {
             <FaCog /> <span>Settings</span>
           </Link>
 
-          <div className="sidebar-item logout" onClick={handleLogout}>
+          {/* 🔹 Open modal instead of direct logout */}
+          <div className="sidebar-item logout" onClick={handleLogoutClick}>
             <FaSignOutAlt /> <span>Logout</span>
           </div>
         </div>
@@ -198,7 +217,7 @@ export default function Settings() {
                   <h2>Category Management</h2>
                   <div className="settings-links">
                     <button
-                      className={`small-link ₹{
+                      className={`small-link ${
                         categoryType === "expense" ? "underline" : ""
                       }`}
                       onClick={() => setCategoryType("expense")}
@@ -206,7 +225,7 @@ export default function Settings() {
                       Expense Categories
                     </button>
                     <button
-                      className={`small-link ₹{
+                      className={`small-link ${
                         categoryType === "income" ? "underline" : ""
                       }`}
                       onClick={() => setCategoryType("income")}
@@ -269,6 +288,13 @@ export default function Settings() {
           </section>
         </div>
       </main>
+
+      {/* 🔹 Logout Confirmation Modal */}
+      <LogoutConfirm
+        show={showLogoutConfirm}
+        onCancel={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }
