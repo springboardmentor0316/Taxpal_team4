@@ -2,10 +2,11 @@
 import "./Signup.css";
 import AuthLayout from "../components/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import api, { setAuthToken } from "../api";
+import countryList from "../data/countries.csv"; // We'll create this CSV with 200+ countries
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -20,6 +21,25 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [countries, setCountries] = useState([]);
+  const incomeBrackets = [
+    "Low (0 – 3.5 LPA)",
+    "Medium (3.5 - 7 LPA)",
+    "High (7 - 9 LPA)",
+    "Above High (>9 LPA)",
+  ];
+
+  useEffect(() => {
+    // Load countries from CSV
+    fetch(countryList)
+      .then((res) => res.text())
+      .then((csvText) => {
+        const lines = csvText.split("\n").map((line) => line.trim()).filter(Boolean);
+        setCountries(lines);
+      })
+      .catch((err) => console.error("Failed to load countries CSV", err));
+  }, []);
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -58,7 +78,7 @@ export default function Signup() {
 
       // API call with 'name' field
       const res = await api.post("/users/signup", {
-        name: form.username,   // sending 'username' as 'name' to backend
+        name: form.username, // sending 'username' as 'name' to backend
         email: form.email,
         password: form.password,
         country: form.country,
@@ -143,20 +163,35 @@ export default function Signup() {
             </span>
           </div>
 
-          <input
-            className="input"
-            name="country"
-            placeholder="Country"
-            value={form.country}
-            onChange={onChange}
-          />
-          <input
-            className="input"
-            name="bracket"
-            placeholder="Income Bracket (Optional)"
-            value={form.bracket}
-            onChange={onChange}
-          />
+          {/* Country dropdown */}
+          <div className="select-wrapper">
+            <select
+              className="input select-input"
+              name="country"
+              value={form.country}
+              onChange={onChange}
+            >
+              <option value="">Select Country</option>
+              {countries.map((c, idx) => (
+                <option key={idx} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Income Bracket dropdown */}
+          <div className="select-wrapper">
+            <select
+              className="input select-input"
+              name="bracket"
+              value={form.bracket}
+              onChange={onChange}
+            >
+              <option value="">Income Bracket (Optional)</option>
+              {incomeBrackets.map((b, idx) => (
+                <option key={idx} value={b}>{b}</option>
+              ))}
+            </select>
+          </div>
 
           <button className="btn btn-gradient" type="submit" disabled={loading}>
             {loading ? "Signing up…" : "Signup"}

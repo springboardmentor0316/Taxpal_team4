@@ -1,0 +1,260 @@
+.transactions-page {
+  display: flex;
+  height: 100vh;
+  background-color: #111827;
+  color: #fff;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2937;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.topbar input {
+  background: #374151;
+  border: none;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  outline: none;
+  width: 260px;
+}
+
+.topbar-right button {
+  margin-left: 10px;
+  background: #374151;
+  border: none;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.transactions-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.transactions-header p {
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.transactions-overview-card {
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 10px;
+}
+
+.card-header .card-icon {
+  color: #22c55e;
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.transactions-table-container {
+  overflow-x: auto;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+.transactions-table th, .transactions-table td {
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.transactions-table th {
+  background: #374151;
+  color: #cbd5e1;
+  font-weight: 600;
+  border-bottom: 2px solid #4b5563;
+}
+
+.transactions-table tr:nth-child(even) {
+  background: #2d3748;
+}
+
+.transactions-table tr:hover {
+  background: #374151;
+}
+
+.green-text {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.red-text {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.actions-cell {
+  position: relative;
+}
+
+.ellipsis-icon {
+  cursor: pointer;
+}
+
+.action-menu {
+  position: absolute;
+  right: 0;
+  top: 24px;
+  background: #374151;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.action-menu button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.action-menu button:hover {
+  color: #22c55e;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+}
+
+/* Match dark modal card color */
+.new-card-style {
+  background-color: #0f172a;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+/* Edit Modal Styling */
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.edit-modal {
+  background-color: #0f172a;
+  padding: 25px;
+  border-radius: 10px;
+  width: 400px;
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.edit-modal-header h3 {
+  margin: 0;
+}
+
+.close-icon {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.edit-modal-body label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.edit-modal-body input,
+.edit-modal-body textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 6px;
+  background: #1e293b;
+  color: white;
+  font-size: 14px;
+}
+
+.edit-modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn,
+.update-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cancel-btn {
+  background: #334155;
+  color: white;
+}
+
+.update-btn {
+  background: linear-gradient(to right, #6d28d9, #9333ea);
+  color: white;
+}
+
+.highlighted {
+  background-color: #fff9c4; /* light yellow highlight */
+  transition: background-color 1.6s ease;
+}

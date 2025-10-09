@@ -10,11 +10,11 @@ import {
 
 const router = express.Router();
 
-// ✅ Country & State APIs
+// Country & State APIs
 router.get("/countries", getCountries);
 router.get("/states/:countryCode", getStatesByCountry);
 
-// ✅ Tax APIs
+// Tax APIs
 router.post("/calculate", calculateTax);
 router.get("/history", getTaxHistory);
 router.get("/calendar", getTaxCalendar);

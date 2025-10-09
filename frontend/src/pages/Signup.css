@@ -81,3 +81,34 @@
   height: 100vh;
   overflow: hidden;   /* disables scroll only for Signup */
 }
+
+
+
+/* Wrap the select so we can style the arrow */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Remove default arrow */
+.select-input {
+  -webkit-appearance: none; /* Chrome, Safari, Edge */
+  -moz-appearance: none;    /* Firefox */
+  appearance: none;
+  padding-right: 40px; /* space for custom arrow */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Custom arrow */
+.select-wrapper::after {
+  content: '▾'; /* down arrow */
+  position: absolute;
+  right: 10px; /* move left/right */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 20px;
+  color: #555;
+}

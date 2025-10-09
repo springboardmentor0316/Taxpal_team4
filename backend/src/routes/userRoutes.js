@@ -15,12 +15,15 @@ const router = express.Router();
 // ---------------- Auth routes ----------------
 router.post("/signup", signup);
 router.post("/login", login);
+
+
 router.get("/me", protect, getMe);
 
 // ---------------- Password reset routes ----------------
 router.post("/forgot-password", forgotPassword); // works with updated controller
 router.post("/verify-otp", verifyOtp);
 router.post("/reset-password", resetPassword);
+
 
 // ---------------- Dashboard route ----------------
 router.get("/dashboard", protect, async (req, res) => {

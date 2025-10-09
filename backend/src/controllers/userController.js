@@ -85,8 +85,24 @@ export const login = async (req, res) => {
 
 // ---------------- Get Current User ----------------
 export const getMe = async (req, res) => {
-  res.json({ user: req.user });
+  try {
+    const user = await User.findById(req.user.id).select("name email country income");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      country: user.country,
+      income: user.income,
+    });
+  } catch (error) {
+    console.error("Error in getMe:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
+
 
 // ---------------- Forgot Password (Modified) ----------------
 export const forgotPassword = async (req, res) => {

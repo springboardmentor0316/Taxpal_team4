@@ -21,7 +21,7 @@ export const getStatesByCountry = (req, res) => {
   res.json(filteredStates);
 };
 
-// ✅ Calculate Estimated Tax (Avoid duplicates)
+// ✅ Calculate Estimated Tax (replace active record for same quarter)
 export const calculateTax = async (req, res) => {
   try {
     const {
@@ -36,48 +36,25 @@ export const calculateTax = async (req, res) => {
       homeOffice,
     } = req.body;
 
-    console.log("📥 Tax API request body:", req.body);
-
     if (!income || !quarter || !country || !state || !filingStatus) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     // 💡 Simple Tax Formula
     const taxableIncome =
-      income -
-      (Number(expenses) +
-        Number(retirement) +
-        Number(insurance) +
-        Number(homeOffice));
+      income - (Number(expenses) + Number(retirement) + Number(insurance) + Number(homeOffice));
 
     let taxRate = filingStatus === "married" ? 0.18 : 0.22;
     let estimatedTax = taxableIncome * taxRate;
     if (estimatedTax < 0) estimatedTax = 0;
 
-    // ✅ Check for duplicate record
-    const existing = await TaxRecord.findOne({
-      country,
-      state,
-      filingStatus,
-      quarter,
-      income,
-      expenses,
-      retirement,
-      insurance,
-      homeOffice,
-    });
+    // ✅ Archive any existing active record for this quarter
+    await TaxRecord.updateMany(
+      { country, state, filingStatus, quarter, status: "active" },
+      { $set: { status: "archived" } }
+    );
 
-    if (existing) {
-      console.log("⚠️ Duplicate record skipped.");
-      return res.json({
-        message: "Tax already calculated for these details",
-        taxableIncome,
-        estimatedTax,
-        record: existing,
-      });
-    }
-
-    // ✅ Save record in DB if not duplicate
+    // ✅ Save new record as active
     const newRecord = new TaxRecord({
       country,
       state,
@@ -89,6 +66,7 @@ export const calculateTax = async (req, res) => {
       insurance,
       homeOffice,
       estimatedTax,
+      status: "active",
     });
 
     await newRecord.save();
@@ -105,7 +83,7 @@ export const calculateTax = async (req, res) => {
   }
 };
 
-// ✅ Fetch Tax Records (History)
+// ✅ Fetch Tax Records (History: includes archived + active)
 export const getTaxHistory = async (req, res) => {
   try {
     const records = await TaxRecord.find().sort({ createdAt: -1 });
@@ -115,19 +93,17 @@ export const getTaxHistory = async (req, res) => {
   }
 };
 
-// ✅ Return Real-Time Tax Calendar Events (with amounts)
+// ✅ Return Real-Time Tax Calendar Events (only active records)
 export const getTaxCalendar = async (req, res) => {
   try {
     const currentYear = new Date().getFullYear();
 
+    // Only active records
     const records = await TaxRecord.find({
-      createdAt: {
-        $gte: new Date(`${currentYear}-01-01`),
-        $lte: new Date(`${currentYear}-12-31`),
-      },
+      status: "active",
+      createdAt: { $gte: new Date(`${currentYear}-01-01`), $lte: new Date(`${currentYear}-12-31`) },
     });
 
-    // Map each quarter to its record
     const quartersWithRecords = new Map();
     records.forEach((record) => {
       quartersWithRecords.set(record.quarter, record);
@@ -135,88 +111,34 @@ export const getTaxCalendar = async (req, res) => {
 
     const events = [];
 
-    if (quartersWithRecords.has("Q1")) {
-      const record = quartersWithRecords.get("Q1");
-      events.push(
-        {
-          type: "reminder",
-          title: "Reminder: Q1 Estimated Tax Payment",
-          date: `${currentYear}-03-01`,
-          description: `Reminder for Q1 estimated tax payment due on Mar 15, ${currentYear}`,
-        },
-        {
-          type: "payment",
-          title: "Q1 Estimated Tax Payment",
-          date: `${currentYear}-03-15`,
-          description: "First quarter estimated tax payment due",
-          amount: record.estimatedTax, // ✅ Added
-        }
-      );
-    }
+    const addQuarterEvents = (q, month, day, titleSuffix) => {
+      if (quartersWithRecords.has(q)) {
+        const record = quartersWithRecords.get(q);
+        events.push(
+          {
+            type: "reminder",
+            title: `Reminder: ${q} Estimated Tax Payment`,
+            date: `${currentYear}-${month}-01`,
+            description: `Reminder for ${q} estimated tax payment due on ${month}-${day}, ${currentYear}`,
+          },
+          {
+            type: "payment",
+            title: `${q} Estimated Tax Payment`,
+            date: `${currentYear}-${month}-${day}`,
+            description: `${q} estimated tax payment due`,
+            amount: record.estimatedTax,
+          }
+        );
+      }
+    };
 
-    if (quartersWithRecords.has("Q2")) {
-      const record = quartersWithRecords.get("Q2");
-      events.push(
-        {
-          type: "reminder",
-          title: "Reminder: Q2 Estimated Tax Payment",
-          date: `${currentYear}-06-01`,
-          description: `Reminder for Q2 estimated tax payment due on Jun 15, ${currentYear}`,
-        },
-        {
-          type: "payment",
-          title: "Q2 Estimated Tax Payment",
-          date: `${currentYear}-06-15`,
-          description: "Second quarter estimated tax payment due",
-          amount: record.estimatedTax, // ✅ Added
-        }
-      );
-    }
-
-    if (quartersWithRecords.has("Q3")) {
-      const record = quartersWithRecords.get("Q3");
-      events.push(
-        {
-          type: "reminder",
-          title: "Reminder: Q3 Estimated Tax Payment",
-          date: `${currentYear}-09-01`,
-          description: `Reminder for Q3 estimated tax payment due on Sep 15, ${currentYear}`,
-        },
-        {
-          type: "payment",
-          title: "Q3 Estimated Tax Payment",
-          date: `${currentYear}-09-15`,
-          description: "Third quarter estimated tax payment due",
-          amount: record.estimatedTax, // ✅ Added
-        }
-      );
-    }
-
-    if (quartersWithRecords.has("Q4")) {
-      const record = quartersWithRecords.get("Q4");
-      events.push(
-        {
-          type: "reminder",
-          title: "Reminder: Q4 Estimated Tax Payment",
-          date: `${currentYear}-12-01`,
-          description: `Reminder for Q4 estimated tax payment due on Jan 15, ${
-            currentYear + 1
-          }`,
-        },
-        {
-          type: "payment",
-          title: "Q4 Estimated Tax Payment",
-          date: `${currentYear}-12-15`,
-          description: "Fourth quarter estimated tax payment due",
-          amount: record.estimatedTax, // ✅ Added
-        }
-      );
-    }
+    addQuarterEvents("Q1", "03", "15");
+    addQuarterEvents("Q2", "06", "15");
+    addQuarterEvents("Q3", "09", "15");
+    addQuarterEvents("Q4", "12", "15");
 
     res.json(events);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch tax calendar", error: err });
+    res.status(500).json({ message: "Failed to fetch tax calendar", error: err });
   }
 };
