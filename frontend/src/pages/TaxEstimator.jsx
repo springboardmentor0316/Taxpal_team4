@@ -38,8 +38,9 @@ export default function TaxEstimator() {
   const [allStates, setAllStates] = useState([]);
   const [filteredStates, setFilteredStates] = useState([]);
   const [calendarEvents, setCalendarEvents] = useState([]);
+  const [taxHistory, setTaxHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
-  // fetch CSV on mount
   useEffect(() => {
     const fetchCSV = async (path, setter) => {
       try {
@@ -71,7 +72,6 @@ export default function TaxEstimator() {
     );
   }, []);
 
-  // fetch calendar
   const fetchCalendar = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/tax/calendar");
@@ -84,14 +84,27 @@ export default function TaxEstimator() {
     }
   };
 
+  const fetchHistory = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/tax/history");
+      const sorted = res.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setTaxHistory(sorted);
+    } catch (err) {
+      console.error("❌ Error fetching tax history:", err);
+    }
+  };
+
   useEffect(() => {
     fetchCalendar();
+    fetchHistory();
   }, []);
 
-  const groupByMonth = (events) => {
+  const groupByMonth = (events, dateField = "date", desc = false) => {
     const groups = {};
     events.forEach((ev) => {
-      const date = new Date(ev.date);
+      const date = new Date(ev[dateField]);
       const monthYear = date.toLocaleString("default", {
         month: "short",
         year: "numeric",
@@ -100,19 +113,25 @@ export default function TaxEstimator() {
       groups[monthYear].push(ev);
     });
 
+    // Sort month keys descending if desc=true, else ascending
     const sortedKeys = Object.keys(groups).sort((a, b) => {
-      const dateA = new Date(`${a}`);
-      const dateB = new Date(`${b}`);
-      return dateA - dateB;
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return desc ? dateB - dateA : dateA - dateB;
     });
 
     return sortedKeys.map((key) => ({
       month: key,
-      events: groups[key].sort((a, b) => new Date(a.date) - new Date(b.date)),
+      events: groups[key].sort((a, b) =>
+        desc
+          ? new Date(b[dateField]) - new Date(a[dateField])
+          : new Date(a[dateField]) - new Date(b[dateField])
+      ),
     }));
   };
 
-  const groupedEvents = groupByMonth(calendarEvents);
+  const groupedCalendar = groupByMonth(calendarEvents);
+  const groupedHistory = groupByMonth(taxHistory, "createdAt", true); // ✅ Descending
 
   useEffect(() => {
     if (form.country) {
@@ -136,7 +155,6 @@ export default function TaxEstimator() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ✅ handleSubmit with calendar saving
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -152,7 +170,6 @@ export default function TaxEstimator() {
     let taxRate = form.filingStatus === "married" ? 0.08 : 0.1;
     const estimatedTax = taxableIncome * taxRate;
 
-    // ✅ Always update Tax Summary
     setCalculatedTax({
       quarter: form.quarter,
       deductions,
@@ -161,29 +178,6 @@ export default function TaxEstimator() {
     });
 
     try {
-      // ✅ Check duplicates
-      const existing = await axios.get("http://localhost:5000/api/tax/history");
-      const isDuplicate = existing.data.some((r) => {
-        return (
-          r.country === form.country &&
-          r.state === form.state &&
-          r.filingStatus === form.filingStatus &&
-          r.quarter === form.quarter &&
-          r.income === income &&
-          r.expenses === expenses &&
-          r.retirement === retirement &&
-          r.insurance === insurance &&
-          r.homeOffice === homeOffice &&
-          r.estimatedTax === estimatedTax
-        );
-      });
-
-      if (isDuplicate) {
-        toast.info("⚠️ Tax calculation already exists. Summary updated only.");
-        return;
-      }
-
-      // ✅ Save new record in DB (backend will also create calendar event)
       await axios.post("http://localhost:5000/api/tax/calculate", {
         country: form.country,
         state: form.state,
@@ -198,7 +192,8 @@ export default function TaxEstimator() {
       });
 
       toast.success("✅ Tax estimation calculated & saved!");
-      await fetchCalendar(); // refresh events after saving
+      await fetchCalendar();
+      await fetchHistory();
     } catch (err) {
       console.error("❌ Error saving tax record:", err);
       toast.error("❌ Failed to save tax calculation");
@@ -252,10 +247,10 @@ export default function TaxEstimator() {
         <h2 className="page-title">Tax Estimator</h2>
         <p className="subtitle">Calculate your estimated tax obligations</p>
 
+        {/* Tax Form + Summary */}
         <div className="tax-estimator-grid">
           <form className="tax-form" onSubmit={handleSubmit}>
             <h3>Quarterly Tax Calculator</h3>
-
             <div className="form-row">
               <select name="country" value={form.country} onChange={handleChange}>
                 <option value="">Country/Region</option>
@@ -367,20 +362,20 @@ export default function TaxEstimator() {
               </div>
             ) : (
               <p>
-                Enter your income and deduction details to calculate your
-                estimated quarterly tax.
+                Enter your income and deduction details to calculate your estimated
+                quarterly tax.
               </p>
             )}
           </div>
         </div>
 
-        {/* ✅ Updated Tax Calendar with Amount */}
+        {/* ✅ Tax Calendar */}
         <div className="tax-calendar">
           <h3>Tax Calendar</h3>
-          {groupedEvents.length === 0 ? (
+          {groupedCalendar.length === 0 ? (
             <p>No upcoming tax events.</p>
           ) : (
-            groupedEvents.map(({ month, events }) => (
+            groupedCalendar.map(({ month, events }) => (
               <div key={month} className="calendar-month">
                 <h4>{month}</h4>
                 {events.map((ev, idx) => (
@@ -396,9 +391,7 @@ export default function TaxEstimator() {
                       </span>
                     </div>
                     <p>{new Date(ev.date).toDateString()}</p>
-                    <p>{ev.description}</p>
-
-                    {/* ✅ Show Amount only for payment events */}
+                    <p className="desc">{ev.description}</p>
                     {ev.type === "payment" && ev.amount !== undefined && (
                       <p>
                         <strong>Amount:</strong> ₹{ev.amount}
@@ -408,6 +401,70 @@ export default function TaxEstimator() {
                 ))}
               </div>
             ))
+          )}
+        </div>
+
+        {/* ✅ Line space between calendar & history */}
+        <div style={{ marginTop: "25px" }}></div>
+
+        {/* ✅ Tax History */}
+        <div className="tax-calendar">
+          <h3>Tax History</h3>
+          <div style={{ textAlign: "center", marginBottom: "12px" }}>
+            <button
+              className="btn-calc"
+              style={{
+                width: "130px",
+                padding: "6px 8px",
+                fontSize: "13px",
+                background: "linear-gradient(90deg, #6366f1, #a855f7)",
+              }}
+              onClick={() => setShowHistory(!showHistory)}
+            >
+              {showHistory ? "Hide History" : "See Tax History"}
+            </button>
+          </div>
+
+          {showHistory &&
+            groupedHistory.map(({ month, events }) => (
+              <div key={month} className="calendar-month">
+                <h4>{month}</h4>
+                <div className="calendar-card">
+                  <table className="history-table">
+                    <thead>
+                      <tr>
+                        <th>Quarter</th>
+                        <th>Income (₹)</th>
+                        <th>Deductions (₹)</th>
+                        <th>Estimated Tax (₹)</th>
+                        <th>Date Calculated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {events.map((record) => (
+                        <tr key={record._id}>
+                          <td>{record.quarter}</td>
+                          <td>{record.income}</td>
+                          <td>
+                            {record.expenses +
+                              record.retirement +
+                              record.insurance +
+                              record.homeOffice}
+                          </td>
+                          <td>{record.estimatedTax}</td>
+                          <td>{new Date(record.createdAt).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+
+          {showHistory && groupedHistory.length === 0 && (
+            <p style={{ textAlign: "center", color: "#94a3b8" }}>
+              No previous tax calculations.
+            </p>
           )}
         </div>
       </main>

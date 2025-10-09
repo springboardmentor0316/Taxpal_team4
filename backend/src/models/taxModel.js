@@ -13,6 +13,7 @@ const taxSchema = new mongoose.Schema(
     insurance: { type: Number, default: 0 },
     homeOffice: { type: Number, default: 0 },
     estimatedTax: { type: Number, required: true },
+    status: { type: String, enum: ["active", "archived"], default: "active" }, // ✅ new field
   },
   { timestamps: true }
 );

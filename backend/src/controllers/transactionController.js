@@ -41,7 +41,7 @@ export const getTransactions = async (req, res) => {
 export const createTransaction = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { type, category, amount, date, note } = req.body;
+    const { type, category, amount, date, note, description } = req.body;
 
     const tx = await Transaction.create({
       user: userId,
@@ -50,6 +50,7 @@ export const createTransaction = async (req, res) => {
       amount,
       date: date ? new Date(date) : Date.now(),
       note,
+      description, // <-- save description
     });
 
     // 🔄 update related budget spent if expense
@@ -72,10 +73,11 @@ export const updateTransaction = async (req, res) => {
   try {
     const userId = req.user._id;
     const { id } = req.params;
+    const { type, category, amount, date, note, description } = req.body;
 
     const tx = await Transaction.findOneAndUpdate(
       { _id: id, user: userId },
-      req.body,
+      { type, category, amount, date, note, description }, // <-- include description
       { new: true }
     );
     if (!tx) return res.status(404).json({ message: "Transaction not found" });

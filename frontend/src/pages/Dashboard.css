@@ -192,6 +192,51 @@
   color: #10b981;
 }
 
+/* ✅ View More button */
+.transactions-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.transactions-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.transactions-card-header .view-more-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+.transactions-card-header .view-more-btn:hover {
+  text-decoration: underline;
+}
+
+
+.view-more-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+.view-more-btn:hover {
+  text-decoration: underline;
+}
+
 /* === Record modal === */
 .modal-overlay {
   position: fixed;
@@ -430,4 +475,327 @@
 /* If any other rule forced overflow hidden, allow content */
 .sidebar.always-expanded {
   overflow: visible !important;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.profile {
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile:hover {
+  color: #00bcd4;
+  transform: scale(1.05);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1c2340;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.topbar input {
+  background: #111630;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  width: 250px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-right button {
+  background: #111630;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.topbar-right .profile {
+  background: #111630;
+  border-radius: 50%;
+  padding: 8px;
+  color: #fff;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #1c2340;
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.dropdown-item {
+  background: none;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #2b3560;
+}
+
+.transactions-section {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.type-income {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.type-expense {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.dropdown-item.delete {
+  color: #f44336;
+}
+
+.dropdown-item.delete:hover {
+  /* background: #ffeaea; */
+  color: #d32f2f;
+}
+
+.dashboard-tag {
+  color: #fff;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* Search dropdown */
+.search-dropdown {
+  position: absolute;
+  background: #fff;
+  top: 40px;
+  left: 0;
+  right: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.search-item:hover {
+  background: #f3f3f3;
+}
+
+.search-item small {
+  color: #777;
+}
+
+.no-results {
+  text-align: center;
+  color: #999;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 180px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.profile-welcome {
+  padding: 10px 12px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  color: #000 !important;  /* Always black */
+}
+
+/* Specific styling for View Profile button */
+.profile-menu .dropdown-item.view-profile {
+  color: #000 !important;   /* Always black */
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-menu .dropdown-item.view-profile:hover {
+  background: none; /* Prevent hover color change */
+  color: #000 !important; /* Keep text black on hover */
+}
+
+
+/* Dark mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #eee;
+}
+
+body.dark-mode .card,
+body.dark-mode .chart-card,
+body.dark-mode .transactions-card {
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+body.dark-mode .search-dropdown,
+body.dark-mode .profile-menu {
+  background: #222;
+  color: #eee;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: #333;
+}
+
+/* Toggle switch wrapper */
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 28px;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: 0.4s;
+}
+
+.slider .icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.slider .sun {
+  left: 8px;
+}
+
+.slider .moon {
+  right: 8px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider:before {
+  transform: translateX(32px);
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+/* When checked */
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
 }
